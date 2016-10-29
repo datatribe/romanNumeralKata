@@ -13,6 +13,15 @@ public class RomanNumeralConverter {
        // object setup as needed
     }
 
+    public String arabicToRoman(Integer arabicLong){
+        String romanValue = "";
+        if(arabicLong / 1000 > 0){
+            romanValue += "M";
+        }
+
+        return romanValue;
+    }
+
     // public methods
 
     // private methods
