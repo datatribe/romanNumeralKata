@@ -1,5 +1,6 @@
 package com.datatribe.kata;
 
+import javax.sound.midi.SysexMessage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +19,36 @@ public class RomanNumeralConverter {
     // constructor
     public RomanNumeralConverter(){
        // object setup as needed
+
         lookupList.put("1","I");
-
-
+        lookupList.put("2","II");
+        lookupList.put("3","III");
+        lookupList.put("4","IV");
+        lookupList.put("5","V");
+        lookupList.put("6","VI");
+        lookupList.put("7","VII");
+        lookupList.put("8","VIII");
+        lookupList.put("9","IX");
+        lookupList.put("10","X");
+        lookupList.put("20","XX");
+        lookupList.put("30","XXX");
+        lookupList.put("40","XL");
+        lookupList.put("50","L");
+        lookupList.put("60","LX");
+        lookupList.put("70","LXX");
+        lookupList.put("80","LXXX");
+        lookupList.put("90","XC");
+        lookupList.put("100","C");
+        lookupList.put("200","CC");
+        lookupList.put("300","CCC");
+        lookupList.put("400","CD");
+        lookupList.put("500","D");
+        lookupList.put("600","DC");
+        lookupList.put("700","DCC");
+        lookupList.put("800","DCCC");
+        lookupList.put("900","CM");
         lookupList.put("1000","M");
+
     }
 
     // after mapping out the behavior of roman numerals on the white board we observe that:
@@ -43,21 +70,51 @@ public class RomanNumeralConverter {
     public String arabicToRoman(Integer arabic){
         String romanValue = "";
 
-
+        // interrogate arabic number for thousands
         if(arabic / 1000 > 0){
             System.out.println("arabic contains a multiple of 1000");
             String mKey = String.valueOf((Math.abs(arabic/1000) * 1000));
             System.out.println("Arabic M: " + mKey);
             romanValue += lookupList.get(mKey);
+            System.out.println("roman composite: " + romanValue);
         }
 
-        //arabic = arabic % 1000;
+        // reduce arabic to hundreds
+        arabic = arabic % 1000;
+        System.out.println("arabic hundreds " + String.valueOf(arabic));
 
-        if(arabic < 10){
+        // interrogate arabic number for hundreds
+        if(arabic / 100 > 0){
+            System.out.println("arabic contains a multiple of 100");
+            String cKey = String.valueOf((Math.abs(arabic/100) * 100));
+            System.out.println("Arabic C: " + cKey);
+            romanValue += lookupList.get(cKey);
+            System.out.println("roman composite: " + romanValue);
+        }
+
+        // reduce arabic to 10s
+        arabic = arabic % 100;
+        System.out.println("arabic tens " + String.valueOf(arabic));
+
+        // interrogate arabic number for tens
+        if(arabic / 10 > 0){
+            System.out.println("arabic contains a multiple of 10");
+            String xKey = String.valueOf((Math.abs(arabic/10) * 10));
+            System.out.println("Arabic X: " + xKey);
+            romanValue += lookupList.get(xKey);
+            System.out.println("roman composite: " + romanValue);
+        }
+
+        // reduce arabic to ones
+        arabic = arabic % 10;
+        System.out.println("arabic ones " + String.valueOf(arabic));
+
+        // interrogate arabic number for 1s
+        if(arabic < 10 && arabic > 0){
             romanValue += lookupList.get(String.valueOf(arabic));
+            System.out.println("roman composite: " + romanValue);
         }
-       // romanValue = lookupList.get(arabic);
-        // next step will be to break arabic out by powers
+
 
         return romanValue;
     }

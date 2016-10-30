@@ -75,7 +75,23 @@ public class TestCases {
     }
 
 
+    // test composites
+    @Test
+    public void testCompositesMI(){
+        System.out.println("Test Roman MI");
+        assertEquals("MI",romanNumeralConverter.arabicToRoman((1001)));
+    }
 
+    @Test
+    public void testCompositesMCMLXXXIX(){
+        System.out.println("Test Roman MCMLXXXIX");
+        assertEquals("MCMLXXXIX",romanNumeralConverter.arabicToRoman(1989));
+    }
 
+    @Test
+    public void testCompositesMLXVI(){
+        System.out.println("Test Roman MLXVI");
+        assertEquals("MLXVI", romanNumeralConverter.arabicToRoman(1066));
+    }
 
 }
