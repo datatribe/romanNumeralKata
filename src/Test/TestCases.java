@@ -12,7 +12,7 @@ import org.junit.*;
 public class TestCases {
 
     // private members
-    private static int testValue;
+    //private static int testValue;
     private static RomanNumeralConverter romanNumeralConverter;
     // public test methods
 
@@ -26,7 +26,7 @@ public class TestCases {
         // if we use any connection pools, etc. that are needed for all tests
         System.out.println("Setting up test run...\r\n");
         romanNumeralConverter = new RomanNumeralConverter();
-        testValue = 1666;
+        //testValue = 1666;
     }
 
     @AfterClass
@@ -64,7 +64,18 @@ public class TestCases {
     @Test
     public void testRomanM(){
         System.out.println("Test Roman M value");
-        assertEquals("M",romanNumeralConverter.arabicToRoman(testValue));
+        assertEquals("M",romanNumeralConverter.arabicToRoman(1000));
     }
+
+    // test cases provided by kata instructions
+    @Test
+    public void testRomanI(){
+        System.out.println("Testing Roman I value");
+        assertEquals("I",romanNumeralConverter.arabicToRoman(1));
+    }
+
+
+
+
 
 }
