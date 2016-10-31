@@ -96,10 +96,24 @@ public class TestCases {
 
     // test cases for reverse lookup
 
+    // test with a whole value (a value found wholely in a lookup list entry
     @Test
     public void testReverseLookup(){
         System.out.println("Testing reverse lookup with VII");
         assertEquals(Integer.valueOf(7), romanNumeralConverter.romanToArabic("VII"));
     }
 
+    // test with a composite value
+    @Test
+    public void testReverseLookupComposite(){
+        System.out.println("Testing reverse lookup with XVII");
+        assertEquals(Integer.valueOf(17), romanNumeralConverter.romanToArabic("XVII"));
+    }
+
+    // test round trip
+    @Test
+    public void testRoundTrip(){
+        System.out.println("Testing 1989 to roman to 1989");
+        assertEquals(Integer.valueOf(1989), romanNumeralConverter.romanToArabic(romanNumeralConverter.arabicToRoman(1989)));
+    }
 }

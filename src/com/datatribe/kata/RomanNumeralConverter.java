@@ -125,13 +125,21 @@ public class RomanNumeralConverter {
         return romanValue;
     }
 
-    public Integer romanToArabic(String roman){
-       return lookupArabicFromRoman(roman);
-
+    public Integer romanToArabic(String roman) {
+        int aggregator = 0;
+        int tmpval = 0;
+        while (!roman.equals("")){
+            tmpval = lookupArabicFromRoman(roman);
+            roman = roman.replace(lookupList.get(String.valueOf(tmpval)), "");
+            aggregator += tmpval;
+        }
+        System.out.println("Reverse Lookup produced " + String.valueOf(aggregator));
+        return Integer.valueOf(aggregator);
     }
     // private methods
 
     private Integer lookupArabicFromRoman(String romanFragment) {
+        System.out.println("Search for fragment " + romanFragment);
         if (lookupList.containsValue(romanFragment)) {
             System.out.println("key is in map");
             for(int i = keys.size()-1; i>=0; i--){
