@@ -94,4 +94,12 @@ public class TestCases {
         assertEquals("MLXVI", romanNumeralConverter.arabicToRoman(1066));
     }
 
+    // test cases for reverse lookup
+
+    @Test
+    public void testReverseLookup(){
+        System.out.println("Testing reverse lookup with VII");
+        assertEquals(Integer.valueOf(7), romanNumeralConverter.romanToArabic("VII"));
+    }
+
 }

@@ -1,20 +1,26 @@
 package com.datatribe.kata;
 
 import javax.sound.midi.SysexMessage;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.Map;
 
 /**
  * Created by datatribe on 10/29/2016.
+ *
+ * A class to provide arabic number to roman numeral conversion, and the reverse.
+ *
+ * TODO: implement log4j or slf4j
+ *
  */
 public class RomanNumeralConverter {
     // public declarations
 
     // private declarations
-    private Map<String, String> lookupList = new HashMap<String, String>();
-    //private Map<String, String> tensList = new HashMap<Integer, String>();
-    //private Map<String, String> hundredsList = new HashMap<Integer,String>();
-    //private Map<String, String> thousandsList = new HashMap<Integer,String>();
+    private Map<String, String> lookupList = new TreeMap<String, String>();
+    private ArrayList<String> keys;
+
+
 
     // constructor
     public RomanNumeralConverter(){
@@ -48,7 +54,7 @@ public class RomanNumeralConverter {
         lookupList.put("800","DCCC");
         lookupList.put("900","CM");
         lookupList.put("1000","M");
-
+        keys = new ArrayList<String>(lookupList.keySet());
     }
 
     // after mapping out the behavior of roman numerals on the white board we observe that:
@@ -66,7 +72,7 @@ public class RomanNumeralConverter {
     // can more quickly and efficiently arrive at a solution based on this 4-1-4-1 pattern
 
 
-
+    // public methods
     public String arabicToRoman(Integer arabic){
         String romanValue = "";
 
@@ -119,7 +125,25 @@ public class RomanNumeralConverter {
         return romanValue;
     }
 
-    // public methods
+    public Integer romanToArabic(String roman){
+       return lookupArabicFromRoman(roman);
 
+    }
     // private methods
+
+    private Integer lookupArabicFromRoman(String romanFragment) {
+        if (lookupList.containsValue(romanFragment)) {
+            System.out.println("key is in map");
+            for(int i = keys.size()-1; i>=0; i--){
+                System.out.println("Step " + String.valueOf(i) + " has value " +lookupList.get(keys.get(i)));
+                if (lookupList.get(keys.get(i)).equalsIgnoreCase(romanFragment)){
+                    System.out.println("key match found");
+                    return Integer.valueOf(keys.get(i));
+                }
+            }
+        } else {
+            return lookupArabicFromRoman(romanFragment.substring(1));
+        }
+        return 0;
+    }
 }
