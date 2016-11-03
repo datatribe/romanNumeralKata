@@ -75,7 +75,7 @@ public class RomanNumeralConverter {
     }
 
 
-
+    /////////////////
     // public methods
 
     /**
@@ -166,6 +166,8 @@ public class RomanNumeralConverter {
         logger.debug("Reverse Lookup produced " + String.valueOf(aggregator));
         return aggregator;
     }
+
+    //////////////////
     // private methods
 
     /** recursion function for regressively searching the look up
@@ -174,7 +176,6 @@ public class RomanNumeralConverter {
 
     private int lookupArabicFromRoman(String romanFragment) throws StringIndexOutOfBoundsException {
         logger.debug("Search for fragment " + romanFragment);
-
 
         if (reverseLookup.containsKey(romanFragment)){
             logger.debug("key found in reverse lookup list");
@@ -195,7 +196,7 @@ public class RomanNumeralConverter {
     private String getRomanValuebyPower(int power, int arabic){
         String powerLabel = String.valueOf(power);
         String output = "";
-        // interrogate arabic number for hundreds
+
         if(arabic / power > 0){
             logger.debug("arabic contains a multiple of " + powerLabel);
             String cKey = String.valueOf((Math.abs(arabic/power) * power));
