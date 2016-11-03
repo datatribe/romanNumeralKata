@@ -1,10 +1,11 @@
 package Test;
 
 import com.datatribe.kata.RomanNumeralConverter;
+import com.datatribe.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-
+import org.apache.log4j.*;
 
 /**
  * Created by datatribe on 10/28/2016.
@@ -14,6 +15,8 @@ public class TestCases {
     // private members
     //private static int testValue;
     private static RomanNumeralConverter romanNumeralConverter;
+    
+    private static Logger logger = Utility.logger;
     // public test methods
 
 
@@ -24,7 +27,7 @@ public class TestCases {
     @BeforeClass
     public static void runOnceBeforeClass(){
         // if we use any connection pools, etc. that are needed for all tests
-        System.out.println("Setting up test run...\r\n");
+        logger.debug("Setting up test run...\r\n");
         romanNumeralConverter = new RomanNumeralConverter();
         //testValue = 1666;
     }
@@ -32,88 +35,109 @@ public class TestCases {
     @AfterClass
     public static void runOnceAfterClass(){
         // tear down class members
-        System.out.println("Tearing down after tests have ran.\r\n");
+        logger.debug("Tearing down after tests have ran.\r\n");
         romanNumeralConverter = null;
     }
 
-    /*
-    // Any operations needed before each test method, eg reinitializing class members
-    @Before
-    public void runBeforeTestMethod(){
-        //
-        System.out.println("Pre Test Case Operations...\r\n");
-    }
 
-    // Any cleanup after each test
-    @After
-    public void runAfterEachTest(){
-        //
-        System.out.println("Post Test Case Operations\r\n");
-    }
-    // private test globals
- */
 
     // test methods
     @Test
     public void testObjectCanConstruct(){
-        System.out.println("Test construct RomanNumeralConverter");
+        logger.debug("Test construct RomanNumeralConverter");
 
         assertEquals(true, romanNumeralConverter!=null);
     }
 
-    @Test
-    public void testRomanM(){
-        System.out.println("Test Roman M value");
-        assertEquals("M",romanNumeralConverter.arabicToRoman(1000));
-    }
+
 
     // test cases provided by kata instructions
     @Test
-    public void testRomanI(){
-        System.out.println("Testing Roman I value");
+    public void testProvidedCasesArabicToRoman(){
         assertEquals("I",romanNumeralConverter.arabicToRoman(1));
+        assertEquals("III",romanNumeralConverter.arabicToRoman(3));
+        assertEquals("IX",romanNumeralConverter.arabicToRoman(9));
+        assertEquals("MLXVI",romanNumeralConverter.arabicToRoman(1066));
+        assertEquals("MCMLXXXIX",romanNumeralConverter.arabicToRoman(1989));
+        logger.debug("Completed specified test cases Arabic to Roman");
+    }
+    // test cases for reverse lookup
+    @Test
+    public void testProvidedCasesRomanToArabic(){
+        assertEquals(1,romanNumeralConverter.romanToArabic("I"));
+        assertEquals(3,romanNumeralConverter.romanToArabic("III"));
+        assertEquals(9,romanNumeralConverter.romanToArabic("IX"));
+        assertEquals(1066,romanNumeralConverter.romanToArabic("MLXVI"));
+        assertEquals(1989,romanNumeralConverter.romanToArabic("MCMLXXXIX"));
+        logger.debug("Completed specified test cases Arabic to Roman");
+    }
+
+    @Test
+    public void testRomanM(){
+        logger.debug("Test Roman M value");
+        assertEquals("M",romanNumeralConverter.arabicToRoman(1000));
     }
 
 
     // test composites
     @Test
     public void testCompositesMI(){
-        System.out.println("Test Roman MI");
+        logger.debug("Test Roman MI");
         assertEquals("MI",romanNumeralConverter.arabicToRoman((1001)));
     }
 
     @Test
-    public void testCompositesMCMLXXXIX(){
-        System.out.println("Test Roman MCMLXXXIX");
-        assertEquals("MCMLXXXIX",romanNumeralConverter.arabicToRoman(1989));
+    public void testReverseLookupComposite(){
+        logger.debug("Testing reverse lookup with XVII");
+        assertEquals(17, romanNumeralConverter.romanToArabic("XVII"));
     }
 
-    @Test
-    public void testCompositesMLXVI(){
-        System.out.println("Test Roman MLXVI");
-        assertEquals("MLXVI", romanNumeralConverter.arabicToRoman(1066));
-    }
-
-    // test cases for reverse lookup
-
-    // test with a whole value (a value found wholely in a lookup list entry
+    // test with a whole value (a value found in a lookup list entry)
     @Test
     public void testReverseLookup(){
-        System.out.println("Testing reverse lookup with VII");
-        assertEquals(Integer.valueOf(7), romanNumeralConverter.romanToArabic("VII"));
+        logger.debug("Testing reverse lookup with VII");
+        assertEquals(7, romanNumeralConverter.romanToArabic("VII"));
     }
 
-    // test with a composite value
-    @Test
-    public void testReverseLookupComposite(){
-        System.out.println("Testing reverse lookup with XVII");
-        assertEquals(Integer.valueOf(17), romanNumeralConverter.romanToArabic("XVII"));
-    }
 
     // test round trip
     @Test
     public void testRoundTrip(){
-        System.out.println("Testing 1989 to roman to 1989");
-        assertEquals(Integer.valueOf(1989), romanNumeralConverter.romanToArabic(romanNumeralConverter.arabicToRoman(1989)));
+        logger.debug("Testing 1989 to roman to 1989");
+        assertEquals(1989, romanNumeralConverter.romanToArabic(romanNumeralConverter.arabicToRoman(1989)));
+    }
+
+    // some tests to cover fault tolerances
+
+    @Test
+    public void testOutOfRangeInt(){
+        logger.debug("Testing out of range int 4000");
+        assertEquals("Out of Range",romanNumeralConverter.arabicToRoman(4000));
+    }
+
+    @Test
+    public void testOutOfRangeSignedInt(){
+        logger.debug("Testing out of range int -1");
+        assertEquals("Out of Range",romanNumeralConverter.arabicToRoman(-1));
+    }
+
+    @Test
+    public void testBadRomanNumeral(){
+        // CDCDCD is not avalid Roman Numeral.  We want to make sure our
+        // target method isn't going to incorrectly aggregate 400 3 times.
+        assertNotEquals(1200, romanNumeralConverter.romanToArabic("CDCDCD"));
+    }
+
+
+    @Test
+    public void testMaxRangeInt(){
+        assertEquals("MMMCMXCIX", romanNumeralConverter.arabicToRoman(3999));
+    }
+
+    @Test
+    public void testNearly1000(){
+        // tests to make sure use of ints forces use of non decimals.
+        // if the target method used float instead of int, this would erroneously return M.
+        assertEquals("CMXCIX", romanNumeralConverter.arabicToRoman(999));
     }
 }
