@@ -24,8 +24,6 @@ public class RomanNumeralConverter {
     // private declarations
     private Map<String, String> lookupList;
     private Map<String,String> reverseLookup;
-    //private ArrayList<String> keys;
-
     private static Logger logger = Utility.logger;
 
 
@@ -68,28 +66,14 @@ public class RomanNumeralConverter {
         lookupList.put("1000","M");
         lookupList.put("2000","MM");
         lookupList.put("3000","MMM");
-        // automatically build the reverse lookup list to improve reverse lookup performance
-       // improved test cases by 33 ms
+        // automatically build the reverse lookup list
        for (Object o : lookupList.entrySet()) {
            Map.Entry pair = (Map.Entry) o;
            reverseLookup.put((String) pair.getValue(), (String) pair.getKey());
        }
-        //keys = new ArrayList<>(lookupList.keySet());
+
     }
 
-    // after mapping out the behavior of roman numerals on the white board we observe that:
-    // 1-9 is always expressed the same way
-    // powers of 10 are always expressed the same way
-    // powers of 100 are also consistently expressed
-
-    // based on these observations, lists of values would be a simple way to create roman numerals
-    // without concerning ourselves with writing the logic to evaluate and enforce rules
-
-    // we also observe that for 0-3, we perform addition, where as at 4, subtraction
-    // then from 5-8, addition, and at 9, subtraction.  10 is our zero.
-
-    // based on this observation, there may be a future refactoring whereby numerical functions
-    // can more quickly and efficiently arrive at a solution based on this 4-1-4-1 pattern
 
 
     // public methods
@@ -167,15 +151,9 @@ public class RomanNumeralConverter {
 
         int aggregator = 0;
         int tmpval;
-        //int maxiterations = 50;
-        //int iterations = 0;
 
-        // Working from left to right, look for matches on the lookup table
-        // when a match is found, remove the matching numeral from the input numeral
-        // and aggregate the arabic value
         try{
-            while (!roman.equals("")){ // && iterations < maxiterations){
-                //iterations ++; // prevent a runaway condition in the event bad roman numerals have been provided
+            while (!roman.equals("")){
                 tmpval = lookupArabicFromRoman(roman);
                 roman = roman.replace(lookupList.get(String.valueOf(tmpval)), "");
                 aggregator += tmpval;
@@ -219,7 +197,7 @@ public class RomanNumeralConverter {
         String output = "";
         // interrogate arabic number for hundreds
         if(arabic / power > 0){
-            logger.debug("arabic contains a multiple of" + powerLabel);
+            logger.debug("arabic contains a multiple of " + powerLabel);
             String cKey = String.valueOf((Math.abs(arabic/power) * power));
             logger.debug("Arabic " + powerLabel + ": " + cKey);
             output = lookupList.get(cKey);

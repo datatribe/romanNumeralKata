@@ -55,20 +55,30 @@ public class TestCases {
     @Test
     public void testProvidedCasesArabicToRoman(){
         assertEquals("I",romanNumeralConverter.arabicToRoman(1));
+        logger.debug("---");
         assertEquals("III",romanNumeralConverter.arabicToRoman(3));
+        logger.debug("---");
         assertEquals("IX",romanNumeralConverter.arabicToRoman(9));
+        logger.debug("---");
         assertEquals("MLXVI",romanNumeralConverter.arabicToRoman(1066));
+        logger.debug("---");
         assertEquals("MCMLXXXIX",romanNumeralConverter.arabicToRoman(1989));
+        logger.debug("---");
         logger.debug("Completed specified test cases Arabic to Roman");
     }
     // test cases for reverse lookup
     @Test
     public void testProvidedCasesRomanToArabic(){
         assertEquals(1,romanNumeralConverter.romanToArabic("I"));
+        logger.debug("---");
         assertEquals(3,romanNumeralConverter.romanToArabic("III"));
+        logger.debug("---");
         assertEquals(9,romanNumeralConverter.romanToArabic("IX"));
+        logger.debug("---");
         assertEquals(1066,romanNumeralConverter.romanToArabic("MLXVI"));
+        logger.debug("---");
         assertEquals(1989,romanNumeralConverter.romanToArabic("MCMLXXXIX"));
+        logger.debug("---");
         logger.debug("Completed specified test cases Arabic to Roman");
     }
 
