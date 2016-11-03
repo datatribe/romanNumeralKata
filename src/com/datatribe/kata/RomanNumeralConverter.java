@@ -30,7 +30,9 @@ public class RomanNumeralConverter {
 
 
     /**
-     *  constructor - revised by datatribe revised 10/31/16 - built out lookup list to 3000
+     *  constructor
+     *
+     *  Sets up the lookup map and then automatically creates a reverse lookup map from that
       */
    public RomanNumeralConverter(){
 
@@ -111,39 +113,25 @@ public class RomanNumeralConverter {
         }
 
         // interrogate arabic number for thousands
-        if(arabic / 1000 > 0){
-            logger.debug("arabic contains a multiple of 1000");
-            String mKey = String.valueOf((Math.abs(arabic/1000) * 1000));
-            logger.debug("Arabic M: " + mKey);
-            romanValue += lookupList.get(mKey);
-            logger.debug("roman composite: " + romanValue);
-        }
+        romanValue += getRomanValuebyPower(1000, arabic);
+        logger.debug("roman composite: " + romanValue);
 
         // reduce arabic to hundreds
         arabic = arabic % 1000;
         logger.debug("arabic hundreds " + String.valueOf(arabic));
 
         // interrogate arabic number for hundreds
-        if(arabic / 100 > 0){
-            logger.debug("arabic contains a multiple of 100");
-            String cKey = String.valueOf((Math.abs(arabic/100) * 100));
-            logger.debug("Arabic C: " + cKey);
-            romanValue += lookupList.get(cKey);
-            logger.debug("roman composite: " + romanValue);
-        }
+        romanValue += getRomanValuebyPower(100, arabic);
+        logger.debug("roman composite: " + romanValue);
+
 
         // reduce arabic to 10s
         arabic = arabic % 100;
         logger.debug("arabic tens " + String.valueOf(arabic));
 
         // interrogate arabic number for tens
-        if(arabic / 10 > 0){
-            logger.debug("arabic contains a multiple of 10");
-            String xKey = String.valueOf((Math.abs(arabic/10) * 10));
-            logger.debug("Arabic X: " + xKey);
-            romanValue += lookupList.get(xKey);
-            logger.debug("roman composite: " + romanValue);
-        }
+        romanValue += getRomanValuebyPower(10, arabic);
+        logger.debug("roman composite: " + romanValue);
 
         // reduce arabic to ones
         arabic = arabic % 10;
@@ -164,7 +152,7 @@ public class RomanNumeralConverter {
      *  int romanToArabic - given an input Roman Numeral String I through MMMCMXCIX, finds the appropriate numeric
      *  elements and aggregates them to produce the output.  Uses the private recursive function lookupArabicFromRoman
      *
-     *  This function uses a brute force lookup, dropping the first character each iteration to see if a lookup value
+     *  This function uses brute force parsing, dropping the first character each iteration to see if a lookup value
      *  can be found, starting from the end of the list (highest values) and working backwards.  Returned integers are
      *  aggregated and the "found" portion of the roman numeral is removed from the original and the remaining
      *  Roman Numeral fragment is subjected to the same process until all characters have resulted in a successful
@@ -208,20 +196,7 @@ public class RomanNumeralConverter {
 
     private int lookupArabicFromRoman(String romanFragment) throws StringIndexOutOfBoundsException {
         logger.debug("Search for fragment " + romanFragment);
-        /*
-        if (lookupList.containsValue(romanFragment)) {
-            logger.debug("key is in map");
-            for(int i = keys.size()-1; i>=0; i--){
-                logger.debug("Step " + String.valueOf(i) + " has value " +lookupList.get(keys.get(i)));
-                if (lookupList.get(keys.get(i)).equalsIgnoreCase(romanFragment)){
-                    logger.debug("key match found");
-                    return Integer.valueOf(keys.get(i));
-                }
-            }
-        } else {
-            // drop the leading character and try again
-            return lookupArabicFromRoman(romanFragment.substring(1));
-        }*/
+
 
         if (reverseLookup.containsKey(romanFragment)){
             logger.debug("key found in reverse lookup list");
@@ -231,5 +206,25 @@ public class RomanNumeralConverter {
             return lookupArabicFromRoman(romanFragment.substring(1));
         }
 
+    }
+
+    /**
+     *  getRomanValuebyPower takes a given power and finds the corresponding value in the lookup table of Roman values.
+     * @param power - a power of 10: 1000, 100 or 10
+     * @param arabic - the number to extract the factor from
+     * @return - the corresponding Roman Numeral to the factor at the specified power
+     */
+    private String getRomanValuebyPower(int power, int arabic){
+        String powerLabel = String.valueOf(power);
+        String output = "";
+        // interrogate arabic number for hundreds
+        if(arabic / power > 0){
+            logger.debug("arabic contains a multiple of" + powerLabel);
+            String cKey = String.valueOf((Math.abs(arabic/power) * power));
+            logger.debug("Arabic " + powerLabel + ": " + cKey);
+            output = lookupList.get(cKey);
+
+        }
+        return output;
     }
 }
