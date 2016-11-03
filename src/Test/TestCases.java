@@ -128,6 +128,12 @@ public class TestCases {
         assertNotEquals(1200, romanNumeralConverter.romanToArabic("CDCDCD"));
     }
 
+    @Test
+    public void testBadCharacters(){
+        // junk text should produce zero
+        assertEquals(0,romanNumeralConverter.romanToArabic("lorem ipsum delores"));
+    }
+
 
     @Test
     public void testMaxRangeInt(){

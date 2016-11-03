@@ -24,7 +24,7 @@ public class RomanNumeralConverter {
     // private declarations
     private Map<String, String> lookupList;
     private Map<String,String> reverseLookup;
-    private ArrayList<String> keys;
+    //private ArrayList<String> keys;
 
     private static Logger logger = Utility.logger;
 
@@ -34,8 +34,8 @@ public class RomanNumeralConverter {
       */
    public RomanNumeralConverter(){
 
-        lookupList = new TreeMap<String, String>();
-       reverseLookup = new TreeMap<String, String>();
+        lookupList = new TreeMap<>();
+       reverseLookup = new TreeMap<>();
         lookupList.put("1","I");
         lookupList.put("2","II");
         lookupList.put("3","III");
@@ -68,12 +68,11 @@ public class RomanNumeralConverter {
         lookupList.put("3000","MMM");
         // automatically build the reverse lookup list to improve reverse lookup performance
        // improved test cases by 33 ms
-       Iterator it = lookupList.entrySet().iterator();
-       while (it.hasNext()){
-           Map.Entry pair = (Map.Entry)it.next();
-           reverseLookup.put((String)pair.getValue(),(String)pair.getKey());
+       for (Object o : lookupList.entrySet()) {
+           Map.Entry pair = (Map.Entry) o;
+           reverseLookup.put((String) pair.getValue(), (String) pair.getKey());
        }
-        keys = new ArrayList<String>(lookupList.keySet());
+        //keys = new ArrayList<>(lookupList.keySet());
     }
 
     // after mapping out the behavior of roman numerals on the white board we observe that:
@@ -101,8 +100,8 @@ public class RomanNumeralConverter {
      *  This function procedurally reduces the input int by powers of 10 to find the appropriate Roman Numeral
      *  components, assembling the output String as it goes.
      *
-     * @param arabic
-     * @return
+     * @param arabic input an int 1-3999
+     * @return a properly constructed Roman Numeral representing the value of the input int
      */
     public String arabicToRoman(int arabic){
         String romanValue = "";
@@ -173,24 +172,29 @@ public class RomanNumeralConverter {
      *
      *  Invalid Roman Numerals will produce unexpected results.
      *
-     * @param roman
-     * @return
+     * @param roman - a properly formatted Roman Numeral
+     * @return - for valid Roman Numerals with a value between 1 and 3999, returns the int value
      */
     public int romanToArabic(String roman) {
 
         int aggregator = 0;
-        int tmpval = 0;
-        int maxiterations = 50;
-        int iterations = 0;
+        int tmpval;
+        //int maxiterations = 50;
+        //int iterations = 0;
 
         // Working from left to right, look for matches on the lookup table
         // when a match is found, remove the matching numeral from the input numeral
         // and aggregate the arabic value
-        while (!roman.equals("") && iterations < maxiterations){
-            iterations ++; // prevent a runaway condition in the event bad roman numerals have been provided
-            tmpval = lookupArabicFromRoman(roman);
-            roman = roman.replace(lookupList.get(String.valueOf(tmpval)), "");
-            aggregator += tmpval;
+        try{
+            while (!roman.equals("")){ // && iterations < maxiterations){
+                //iterations ++; // prevent a runaway condition in the event bad roman numerals have been provided
+                tmpval = lookupArabicFromRoman(roman);
+                roman = roman.replace(lookupList.get(String.valueOf(tmpval)), "");
+                aggregator += tmpval;
+            }
+        } catch (StringIndexOutOfBoundsException e){
+            // invalid entries provided
+            return 0;
         }
         // when no more roman numeral characters remain, we have looked up all available chunks
         logger.debug("Reverse Lookup produced " + String.valueOf(aggregator));
@@ -202,7 +206,7 @@ public class RomanNumeralConverter {
      *   table for the smallest matching chunk of roman numerals
      */
 
-    private int lookupArabicFromRoman(String romanFragment) {
+    private int lookupArabicFromRoman(String romanFragment) throws StringIndexOutOfBoundsException {
         logger.debug("Search for fragment " + romanFragment);
         /*
         if (lookupList.containsValue(romanFragment)) {
@@ -218,6 +222,7 @@ public class RomanNumeralConverter {
             // drop the leading character and try again
             return lookupArabicFromRoman(romanFragment.substring(1));
         }*/
+
         if (reverseLookup.containsKey(romanFragment)){
             logger.debug("key found in reverse lookup list");
             return Integer.valueOf(reverseLookup.get(romanFragment));
