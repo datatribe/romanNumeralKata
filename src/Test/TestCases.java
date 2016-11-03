@@ -35,7 +35,7 @@ public class TestCases {
     @AfterClass
     public static void runOnceAfterClass(){
         // tear down class members
-        logger.debug("Tearing down after tests have ran.\r\n");
+        logger.debug("Tearing down ...\r\n");
         romanNumeralConverter = null;
     }
 
