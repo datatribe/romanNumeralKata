@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.Map;
 import com.datatribe.util.*;
 import org.apache.log4j.*;
+import java.io.*;
 
 /**
  * Created by datatribe on 10/29/2016.
@@ -25,7 +26,7 @@ public class RomanNumeralConverter {
     private Map<String, String> lookupList;
     private Map<String,String> reverseLookup;
     private static Logger logger = Utility.logger;
-
+    private static Utility util;
 
     /**
      *  constructor
@@ -33,10 +34,26 @@ public class RomanNumeralConverter {
      *  Sets up the lookup map and then automatically creates a reverse lookup map from that
       */
    public RomanNumeralConverter(){
-
+        util = new Utility();
         lookupList = new TreeMap<>();
+
+       try {
+           File dir = new File(".");
+           File fil = new File(dir.getCanonicalPath() + File.separator + "data.txt");
+           String configtext;
+           configtext = Utility.readFile(fil);
+           String lookupvals[] = configtext.split("\r");
+           String set[];
+           for (String pair : lookupvals){
+               // util.debug("importing roman numeral settings :" + pair);
+               set = pair.split(",");
+               lookupList.put(set[0],set[1]);
+           }
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
        reverseLookup = new TreeMap<>();
-        lookupList.put("1","I");
+      /*  lookupList.put("1","I");
         lookupList.put("2","II");
         lookupList.put("3","III");
         lookupList.put("4","IV");
@@ -66,6 +83,7 @@ public class RomanNumeralConverter {
         lookupList.put("1000","M");
         lookupList.put("2000","MM");
         lookupList.put("3000","MMM");
+        */
         // automatically build the reverse lookup list
        for (Object o : lookupList.entrySet()) {
            Map.Entry pair = (Map.Entry) o;
