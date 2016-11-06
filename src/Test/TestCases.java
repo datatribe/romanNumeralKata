@@ -5,7 +5,7 @@ import com.datatribe.util.*;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.apache.log4j.*;
+
 
 /**
  * Created by datatribe on 10/28/2016.
@@ -13,10 +13,10 @@ import org.apache.log4j.*;
 public class TestCases {
 
     // private members
-    //private static int testValue;
+
     private static RomanNumeralConverter romanNumeralConverter;
     
-    private static Logger logger = Utility.logger;
+
     // public test methods
 
 
@@ -27,15 +27,15 @@ public class TestCases {
     @BeforeClass
     public static void runOnceBeforeClass(){
         // if we use any connection pools, etc. that are needed for all tests
-        logger.debug("Setting up test run...\r\n");
+        Utility.debug("Setting up test run...\r\n");
         romanNumeralConverter = new RomanNumeralConverter();
-        //testValue = 1666;
+
     }
 
     @AfterClass
     public static void runOnceAfterClass(){
         // tear down class members
-        logger.debug("Tearing down ...\r\n");
+        Utility.debug("Tearing down ...\r\n");
         romanNumeralConverter = null;
     }
 
@@ -44,7 +44,7 @@ public class TestCases {
     // test methods
     @Test
     public void testObjectCanConstruct(){
-        logger.debug("Test construct RomanNumeralConverter");
+        Utility.debug("Test construct RomanNumeralConverter");
 
         assertEquals(true, romanNumeralConverter!=null);
     }
@@ -55,36 +55,36 @@ public class TestCases {
     @Test
     public void testProvidedCasesArabicToRoman(){
         assertEquals("I",romanNumeralConverter.arabicToRoman(1));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals("III",romanNumeralConverter.arabicToRoman(3));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals("IX",romanNumeralConverter.arabicToRoman(9));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals("MLXVI",romanNumeralConverter.arabicToRoman(1066));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals("MCMLXXXIX",romanNumeralConverter.arabicToRoman(1989));
-        logger.debug("---");
-        logger.debug("Completed specified test cases Arabic to Roman");
+        Utility.debug("---");
+        Utility.debug("Completed specified test cases Arabic to Roman");
     }
     // test cases for reverse lookup
     @Test
     public void testProvidedCasesRomanToArabic(){
         assertEquals(1,romanNumeralConverter.romanToArabic("I"));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals(3,romanNumeralConverter.romanToArabic("III"));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals(9,romanNumeralConverter.romanToArabic("IX"));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals(1066,romanNumeralConverter.romanToArabic("MLXVI"));
-        logger.debug("---");
+        Utility.debug("---");
         assertEquals(1989,romanNumeralConverter.romanToArabic("MCMLXXXIX"));
-        logger.debug("---");
-        logger.debug("Completed specified test cases Arabic to Roman");
+        Utility.debug("---");
+        Utility.debug("Completed specified test cases Arabic to Roman");
     }
 
     @Test
     public void testRomanM(){
-        logger.debug("Test Roman M value");
+        Utility.debug("Test Roman M value");
         assertEquals("M",romanNumeralConverter.arabicToRoman(1000));
     }
 
@@ -92,20 +92,20 @@ public class TestCases {
     // test composites
     @Test
     public void testCompositesMI(){
-        logger.debug("Test Roman MI");
+        Utility.debug("Test Roman MI");
         assertEquals("MI",romanNumeralConverter.arabicToRoman((1001)));
     }
 
     @Test
     public void testReverseLookupComposite(){
-        logger.debug("Testing reverse lookup with XVII");
+        Utility.debug("Testing reverse lookup with XVII");
         assertEquals(17, romanNumeralConverter.romanToArabic("XVII"));
     }
 
     // test with a whole value (a value found in a lookup list entry)
     @Test
     public void testReverseLookup(){
-        logger.debug("Testing reverse lookup with VII");
+        Utility.debug("Testing reverse lookup with VII");
         assertEquals(7, romanNumeralConverter.romanToArabic("VII"));
     }
 
@@ -113,7 +113,7 @@ public class TestCases {
     // test round trip
     @Test
     public void testRoundTrip(){
-        logger.debug("Testing 1989 to roman to 1989");
+        Utility.debug("Testing 1989 to roman to 1989");
         assertEquals(1989, romanNumeralConverter.romanToArabic(romanNumeralConverter.arabicToRoman(1989)));
     }
 
@@ -121,13 +121,13 @@ public class TestCases {
 
     @Test
     public void testOutOfRangeInt(){
-        logger.debug("Testing out of range int 4000");
+        Utility.debug("Testing out of range int 4000");
         assertEquals("Out of Range",romanNumeralConverter.arabicToRoman(4000));
     }
 
     @Test
     public void testOutOfRangeSignedInt(){
-        logger.debug("Testing out of range int -1");
+        Utility.debug("Testing out of range int -1");
         assertEquals("Out of Range",romanNumeralConverter.arabicToRoman(-1));
     }
 
