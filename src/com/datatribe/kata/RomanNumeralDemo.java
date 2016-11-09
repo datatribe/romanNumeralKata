@@ -1,14 +1,14 @@
 package com.datatribe.kata;
 
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
+import java.util.*;
+import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
+import com.datatribe.util.*;
 /**
  * Created by datatribe on 11/4/2016.
  */
@@ -17,55 +17,109 @@ public class RomanNumeralDemo extends JPanel{
 
     private static FileInputStream fis;
     private static BufferedReader br;
-    private static String[] screentext;
+    private static StringBuffer screentext;
 
-    public void paint(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        Font font = new Font("Serif", Font.PLAIN, 14);
-        g2.setFont(font);
+    private static JFrame frame;
+    private static JLabel inputLabel;
 
-        String line = null;
-        int ln = 1;
-        for (String s : screentext) {
-            g2.drawString(s, 40, 40 * ln);
-            ln++;
+    private static JPanel appPanel;
+
+    private int ln = 1;
+
+    public static void main(String[] args){
+        List<String> filetext = new LinkedList<String>();
+        Utility.debug("Reading demo.txt");
+        filetext = Utility.readFile("demo.txt");
+        //screentext = filetext;
+        screentext = new StringBuffer();
+        Iterator fileit = filetext.listIterator();
+        while(fileit.hasNext()){
+            screentext.append(fileit.next()+"\n");
         }
-    }
-    public static void main(String[] args) {
+        Utility.debug("Finished reading screen text file: " + filetext);
 
-        ;
-        try {
-            File dir = new File(".");
-            File fil = new File(dir.getCanonicalPath() + File.separator + "demo.txt");
-            readFile(fil);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JFrame f = new JFrame();
-        f.getContentPane().add(new RomanNumeralDemo());
-        f.setSize(600, 400);
-        f.setVisible(true);
+        new RomanNumeralDemo();
     }
 
-    private static void readFile(File fin) throws IOException {
-        FileInputStream fis = new FileInputStream(fin);
+    public RomanNumeralDemo(){
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run(){
+                Utility.debug("Running");
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch(ClassNotFoundException ex){
+                } catch(InstantiationException ex){
+                } catch(IllegalAccessException ex){
+                } catch(UnsupportedLookAndFeelException ex){
 
-        //Construct BufferedReader from InputStreamReader
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                }
 
-        String line = null;
-        StringBuffer sb = new StringBuffer();
-        while ((line = br.readLine()) != null) {
-            sb.append(line + "\r");
-        }
+                JFrame frame = new JFrame("Roman Numeral Demo");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLayout(new BorderLayout());
+                frame.add(new PaintPane());
+                frame.setSize(600,400);
+                frame.setLocationRelativeTo(null);
+               // frame.setVisible(true);
+                JPanel description = new JPanel(new GridLayout(1,1));
+                /*
+                ListIterator<String> screentxt = screentext.listIterator();
+            while (screentxt.hasNext()){
+                g2.drawString((String)screentxt.next(), 40, 20 * ln);
+                ln++;
+            }
+                 */
+                JTextArea desc = new JTextArea(9,80);
+                desc.setPreferredSize(new Dimension(300,200));
+                desc.setText(screentext.toString());
+                description.add(desc);
+                frame.add(description, BorderLayout.NORTH);
 
-        screentext = sb.toString().split("\r");
+                JTextField numberField = new JTextField(4);
+                JPanel panel = new JPanel(new GridLayout(2,0));
+                panel.add(new JLabel("Number: "));
+                panel.add(numberField);
+                frame.add(panel,BorderLayout.SOUTH);
+                frame.pack();
+                frame.setVisible(true);
+            }
 
-        br.close();
+        });
     }
+
+    protected class PaintPane extends JPanel {
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Utility.debug("Painting");
+            /*
+            super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            Font font = new Font("Sans-Serif", Font.PLAIN, 14);
+            g2.setFont(font);
+
+            String line = null;
+
+            ListIterator<String> screentxt = screentext.listIterator();
+            while (screentxt.hasNext()){
+                g2.drawString((String)screentxt.next(), 40, 20 * ln);
+                ln++;
+            }
+
+            g2.dispose();
+            */
+        }
+    }
+
+
+
+
+
+
 }
 
 /*
