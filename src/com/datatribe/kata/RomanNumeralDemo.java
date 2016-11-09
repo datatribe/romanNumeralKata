@@ -18,6 +18,7 @@ public class RomanNumeralDemo extends JPanel{
     private static FileInputStream fis;
     private static BufferedReader br;
     private static StringBuffer screentext;
+    private static RomanNumeralConverter romanNumeralConverter;
 
     private static JFrame frame;
     private static JLabel inputLabel;
@@ -27,6 +28,7 @@ public class RomanNumeralDemo extends JPanel{
     private int ln = 1;
 
     public static void main(String[] args){
+        romanNumeralConverter = new RomanNumeralConverter();
         List<String> filetext = new LinkedList<String>();
         Utility.debug("Reading demo.txt");
         filetext = Utility.readFile("demo.txt");
@@ -73,13 +75,62 @@ public class RomanNumeralDemo extends JPanel{
                 JTextArea desc = new JTextArea(9,80);
                 desc.setPreferredSize(new Dimension(300,200));
                 desc.setText(screentext.toString());
+                desc.setFocusable(false);
                 description.add(desc);
                 frame.add(description, BorderLayout.NORTH);
 
                 JTextField numberField = new JTextField(4);
-                JPanel panel = new JPanel(new GridLayout(2,0));
+                JTextField outputField = new JTextField(30);
+                outputField.setFocusable(false);
+                JPanel panel = new JPanel(new GridLayout(2,2));
                 panel.add(new JLabel("Number: "));
+
                 panel.add(numberField);
+                panel.add(new JLabel("Roman numeral: "));
+                panel.add(outputField);
+                numberField.setFocusable(true);
+                numberField.requestFocus();
+                KeyListener numberKeyListener = new KeyListener() {
+                    public void keyPressed(KeyEvent keyEvent) {
+                       // printIt("Pressed", keyEvent);
+                    }
+
+                    public void keyReleased(KeyEvent keyEvent) {
+                       // printIt("Released", keyEvent);
+                        int input = 0;
+                        try{
+                            input  = Integer.parseInt(numberField.getText());
+                            String output = romanNumeralConverter.arabicToRoman(Integer.valueOf(numberField.getText()));
+                            outputField.setText(output);
+                        } catch (Exception e){
+                            numberField.setText(numberField.getText().substring(0,numberField.getText().length()-1));
+                        }
+
+                    }
+
+                    public void keyTyped(KeyEvent keyEvent) {
+                       // printIt("Typed", keyEvent);
+
+                    }
+
+                    private void printIt(String title, KeyEvent keyEvent) {
+                        int keyCode = keyEvent.getKeyCode();
+                        String keyText = KeyEvent.getKeyText(keyCode);
+
+                        System.out.println(title + " : " + keyText + " / " + keyEvent.getKeyChar());
+                    }
+                };
+                numberField.addKeyListener(numberKeyListener);
+
+        /*
+                numberField.addActionListener(new ActionListener() {
+                    @Override
+                            public void actionPerformed(ActionEvent e){
+                                Utility.debug(romanNumeralConverter.arabicToRoman(Integer.valueOf(numberField.getText())));
+                    }
+                });
+
+                */
                 frame.add(panel,BorderLayout.SOUTH);
                 frame.pack();
                 frame.setVisible(true);
