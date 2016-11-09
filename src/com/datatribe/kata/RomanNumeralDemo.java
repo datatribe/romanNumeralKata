@@ -80,48 +80,52 @@ public class RomanNumeralDemo extends JPanel{
                 frame.add(description, BorderLayout.NORTH);
 
                 JTextField numberField = new JTextField(4);
-                JTextField outputField = new JTextField(30);
-                outputField.setFocusable(false);
+                JTextField romanField = new JTextField(30);
+                romanField.setFocusable(true);
                 JPanel panel = new JPanel(new GridLayout(2,2));
                 panel.add(new JLabel("Number: "));
 
                 panel.add(numberField);
                 panel.add(new JLabel("Roman numeral: "));
-                panel.add(outputField);
+                panel.add(romanField);
                 numberField.setFocusable(true);
                 numberField.requestFocus();
                 KeyListener numberKeyListener = new KeyListener() {
-                    public void keyPressed(KeyEvent keyEvent) {
-                       // printIt("Pressed", keyEvent);
-                    }
+                    public void keyPressed(KeyEvent keyEvent){}
+                    public void keyTyped(KeyEvent keyEvent){}
 
                     public void keyReleased(KeyEvent keyEvent) {
-                       // printIt("Released", keyEvent);
+
                         int input = 0;
                         try{
                             input  = Integer.parseInt(numberField.getText());
-                            String output = romanNumeralConverter.arabicToRoman(Integer.valueOf(numberField.getText()));
-                            outputField.setText(output);
+                            String output = romanNumeralConverter.arabicToRoman(input);
+                            romanField.setText(output);
                         } catch (Exception e){
                             numberField.setText(numberField.getText().substring(0,numberField.getText().length()-1));
                         }
 
                     }
 
-                    public void keyTyped(KeyEvent keyEvent) {
-                       // printIt("Typed", keyEvent);
-
-                    }
-
-                    private void printIt(String title, KeyEvent keyEvent) {
-                        int keyCode = keyEvent.getKeyCode();
-                        String keyText = KeyEvent.getKeyText(keyCode);
-
-                        System.out.println(title + " : " + keyText + " / " + keyEvent.getKeyChar());
-                    }
                 };
                 numberField.addKeyListener(numberKeyListener);
+                KeyListener romanKeyListener = new KeyListener(){
+                    public void keyPressed(KeyEvent keyEvent){}
+                    public void keyTyped(KeyEvent keyEvent){}
+                    public void keyReleased(KeyEvent keyEvent) {
 
+                        String input;
+                        try{
+                            input  = romanField.getText();
+                            int output = romanNumeralConverter.romanToArabic(input);
+                            numberField.setText(String.valueOf(output));
+                        } catch (Exception e){
+                            numberField.setText(numberField.getText().substring(0,numberField.getText().length()-1));
+                        }
+
+                    }
+                };
+                romanField.addKeyListener(romanKeyListener);
         /*
                 numberField.addActionListener(new ActionListener() {
                     @Override
