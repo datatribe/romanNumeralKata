@@ -58,13 +58,16 @@ public class RomanNumeralDemo extends JPanel{
                 }
 
                 JFrame frame = new JFrame("Roman Numeral Demo");
+
+                frame.setBackground(Color.WHITE);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                frame.add(new PaintPane());
-                frame.setSize(600,400);
+                //frame.add(new PaintPane());
+                frame.setSize(316,216);
                 frame.setLocationRelativeTo(null);
                // frame.setVisible(true);
                 JPanel description = new JPanel(new GridLayout(1,1));
+                description.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
                 /*
                 ListIterator<String> screentxt = screentext.listIterator();
             while (screentxt.hasNext()){
@@ -72,17 +75,25 @@ public class RomanNumeralDemo extends JPanel{
                 ln++;
             }
                  */
-                JTextArea desc = new JTextArea(9,80);
-                desc.setPreferredSize(new Dimension(300,200));
+                //JTextArea desc = new JTextArea(9,40);
+                JLabel desc = new JLabel();
+                desc.setPreferredSize(new Dimension(300,220));
+                desc.setVerticalAlignment(SwingConstants.TOP);
+                desc.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+                //desc.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
                 desc.setText(screentext.toString());
                 desc.setFocusable(false);
                 description.add(desc);
                 frame.add(description, BorderLayout.NORTH);
 
                 JTextField numberField = new JTextField(4);
+                numberField.setName("arabic");
                 JTextField romanField = new JTextField(30);
+                romanField.setName("roman");
                 romanField.setFocusable(true);
                 JPanel panel = new JPanel(new GridLayout(2,2));
+                panel.setBorder(BorderFactory.createLineBorder(Color.WHITE, 4));
+                panel.setBackground(Color.WHITE);
                 panel.add(new JLabel("Number: "));
 
                 panel.add(numberField);
@@ -95,16 +106,16 @@ public class RomanNumeralDemo extends JPanel{
                     public void keyTyped(KeyEvent keyEvent){}
 
                     public void keyReleased(KeyEvent keyEvent) {
-
-                        int input = 0;
-                        try{
-                            input  = Integer.parseInt(numberField.getText());
-                            String output = romanNumeralConverter.arabicToRoman(input);
-                            romanField.setText(output);
-                        } catch (Exception e){
-                            numberField.setText(numberField.getText().substring(0,numberField.getText().length()-1));
+                        if(keyEvent.getKeyCode()==KeyEvent.VK_ENTER) {
+                            int input = 0;
+                            try {
+                                input = Integer.parseInt(numberField.getText());
+                                String output = romanNumeralConverter.arabicToRoman(input);
+                                romanField.setText(output);
+                            } catch (Exception e) {
+                                numberField.setText(numberField.getText().substring(0, numberField.getText().length() - 1));
+                            }
                         }
-
                     }
 
                 };
@@ -113,16 +124,22 @@ public class RomanNumeralDemo extends JPanel{
                     public void keyPressed(KeyEvent keyEvent){}
                     public void keyTyped(KeyEvent keyEvent){}
                     public void keyReleased(KeyEvent keyEvent) {
-
-                        String input;
-                        try{
-                            input  = romanField.getText();
-                            int output = romanNumeralConverter.romanToArabic(input);
-                            numberField.setText(String.valueOf(output));
-                        } catch (Exception e){
-                            numberField.setText(numberField.getText().substring(0,numberField.getText().length()-1));
+                        if (keyEvent.getKeyCode()==KeyEvent.VK_ENTER) {
+                            if (romanField.getText().contains("Out of Range")) {
+                                romanField.setText(romanField.getText().replace("Out of Range", ""));
+                            }
+                            String input;
+                            try {
+                                input = romanField.getText();
+                                String validroman;
+                                int output = romanNumeralConverter.romanToArabic(input);
+                                validroman = romanNumeralConverter.arabicToRoman(output);
+                                numberField.setText(String.valueOf(output));
+                                romanField.setText(validroman);
+                            } catch (Exception e) {
+                                numberField.setText(numberField.getText().substring(0, numberField.getText().length() - 1));
+                            }
                         }
-
                     }
                 };
                 romanField.addKeyListener(romanKeyListener);
