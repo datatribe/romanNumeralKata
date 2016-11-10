@@ -13,7 +13,7 @@ import com.datatribe.util.*;
  * Created by datatribe on 11/4/2016.
  *
  * A UI to demonstrate the RomanNumeralConverter Library.  Provides a brief concept introduction
- * by way of the demo.txt file and two input fields for entering Arabic or Roman numerals to convert
+ * by way of the demo.html file and two input fields for entering Arabic or Roman numerals to convert
  * to either format.
  */
 
@@ -38,8 +38,8 @@ public class RomanNumeralDemo extends JPanel{
     public static void main(String[] args){
         romanNumeralConverter = new RomanNumeralConverter();
         List<String> filetext = new LinkedList<String>();
-        Utility.debug("Reading demo.txt");
-        filetext = Utility.readFile("demo.txt");
+        Utility.debug("Reading demo.html");
+        filetext = Utility.readFile("demo.html");
         //screentext = filetext;
         screentext = new StringBuffer();
         Iterator fileit = filetext.listIterator();
