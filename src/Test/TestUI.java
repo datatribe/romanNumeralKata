@@ -10,7 +10,7 @@ import org.apache.log4j.*;
 /**
  * Created by datatribe on 11/4/2016.
  */
-public class TestUI extends SwingTestCase{
+public class TestUI {
     // private members
 
     private static RomanNumeralDemo romanNumeralDemo;
@@ -36,8 +36,17 @@ public class TestUI extends SwingTestCase{
         assertNotEquals(null,romanNumeralDemo);
     }
 
+    @Test
+    public void testFileReader(){
+        Utility.debug("Testing file reader");
+        assertEquals("test", Utility.readFile("test.txt").toString().trim());
+    }
 
-
+    @Test
+    public void testNumberInput(){
+        // I've looked at a couple of ways to test the UI automatically, still pondering best method
+        // as this is new to me.
+    }
 
 
 }

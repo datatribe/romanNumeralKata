@@ -139,6 +139,13 @@ public class TestCases {
     }
 
     @Test
+    public void testOddOrderOfValidParts(){
+        // per rules, V, L and D can never be subtracted, so while this order appears to call for
+        // subtracting from M, that is not possible, so this number is valid though unconventional
+        assertEquals(3041, romanNumeralConverter.romanToArabic("IXLMMM"));
+    }
+
+    @Test
     public void testBadCharacters(){
         // junk text should produce zero
         assertEquals(0,romanNumeralConverter.romanToArabic("lorem ipsum delores"));
