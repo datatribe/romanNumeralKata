@@ -1,4 +1,13 @@
-Roman Numeral Refenence Tool
-1 = I, 5 = V, 10 = X, 50 = L, 100 = C, 500 = D, 1000 = M
-Entere a number and click Convert to see the Roman Numeral Equivalent.
----
+<html><h1>Arabic to Roman Numeral Conversion</h1>
+<p>The numeric system represented by Roman numerals originated in
+ancient Rome and remained the usual way of writing numbers
+throughout Europe well into the Late Middle Ages. Numbers in
+this system are represented by combinations of letters from the
+Latin alphabet. Roman numerals, as used today, are based on
+seven symbols:</p>
+<br>
+<pre>I = 1, V = 5, X = 10, L = 50, C = 100, D = 500 and M = 1,000</pre>
+<br>
+<p>Try it yourself - enter a value in either field and press Enter
+to see its counterpart.</p></html>
+
