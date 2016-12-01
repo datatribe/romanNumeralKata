@@ -169,7 +169,6 @@ public class RomanNumeralConverter {
             String cKey = String.valueOf((Math.abs(arabic/power) * power));
             logger.debug("Arabic " + powerLabel + ": " + cKey);
             output = lookupList.get(cKey);
-
         }
         return output;
     }
@@ -181,19 +180,17 @@ public class RomanNumeralConverter {
 
     private void buildReferenceData(){
 
-            String configtext;
-            List<String> lookupvals = Utility.readFile("data.txt");
-            //String lookupvals[] = configtext.split("[\n\r]");
-            //String set[];
+        String configtext;
+        List<String> lookupvals = Utility.readFile("data.txt");
+
         String pair="";
         String set[];
         ListIterator<String> listit = lookupvals.listIterator();
-            while( listit.hasNext()){
-                // util.debug("importing roman numeral settings :" + pair);
-                pair = (String)listit.next();
-                set = pair.split(",");
-                lookupList.put(set[0],set[1]);
-            }
+        while( listit.hasNext()){
+            pair = (String)listit.next();
+            set = pair.split(",");
+            lookupList.put(set[0],set[1]);
+        }
 
 
         // automatically build the reverse lookup list
