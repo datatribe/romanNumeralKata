@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import com.datatribe.kata.RomanNumeralConverter;
 
 import javax.swing.*;
 
