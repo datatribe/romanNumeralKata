@@ -6,7 +6,6 @@ import java.util.TreeMap;
 import java.util.Map;
 import com.datatribe.util.Utility;
 import com.datatribe.util.Constants;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 import org.apache.log4j.*;
 
 import java.util.*;
@@ -67,24 +66,21 @@ public class RomanNumeralConverter {
             return "Out of Range";
         }
 
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_1000);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_100);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_10);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_1);
 
-        deriveRomanFragment(Constants.REDUCTION_FACTOR_1000);
-
-        reduceArabicByFactor(this.arabicReductionRegister, Constants.REDUCTION_FACTOR_1000);
-        deriveRomanFragment(Constants.REDUCTION_FACTOR_100);
-
-        reduceArabicByFactor(this.arabicReductionRegister,Constants.REDUCTION_FACTOR_100);
-        deriveRomanFragment(Constants.REDUCTION_FACTOR_10);
-
-        reduceArabicByFactor(this.arabicReductionRegister, Constants.REDUCTION_FACTOR_10);
-
-        deriveRomanFragment(Constants.REDUCTION_FACTOR_1);
-
-        return romanNumeralAccumulator;
+        return this.romanNumeralAccumulator;
     }
 
-    private void reduceArabicByFactor(int arabicIn, int reductionFactor){
-        this.arabicReductionRegister =  arabicIn % reductionFactor;
+    private void distillRomanFragmentFromArabicByPower(int factor){
+        deriveRomanFragment(factor);
+        reduceArabicByFactor(factor);
+    }
+
+    private void reduceArabicByFactor(int reductionFactor){
+        this.arabicReductionRegister =  this.arabicReductionRegister % reductionFactor;
     }
 
     private void deriveRomanFragment(int reductionFactor){
