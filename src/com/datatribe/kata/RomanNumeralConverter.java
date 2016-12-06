@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import java.util.Map;
 import com.datatribe.util.Utility;
 import com.datatribe.util.Constants;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import org.apache.log4j.*;
 
 import java.util.*;
@@ -29,6 +30,8 @@ public class RomanNumeralConverter {
     private static Logger logger = Utility.logger;
     private static Utility util;
 
+    private int arabicReductionRegister = 0;
+    private String romanNumeralAccumulator = "";
 
    /**
     *  constructor
@@ -58,46 +61,45 @@ public class RomanNumeralConverter {
      * @return a properly constructed Roman Numeral representing the value of the input int
      */
     public String arabicToRoman(int arabic){
-        String romanValue = "";
-
-        if (arabic > Constants.MAX_INPUT_INT || arabic < Constants.MIN_INPUT_INT){
+        this.romanNumeralAccumulator = "";
+        this.arabicReductionRegister = arabic;
+        if (!checkArabicInputInRange(arabic)){
             return "Out of Range";
         }
 
-        // interrogate arabic number for thousands
-        romanValue += getRomanValuebyPower(Constants.REDUCTION_FACTOR_1000, arabic);
-        logger.debug("roman composite: " + romanValue);
 
-        // reduce arabic to hundreds
-        arabic = arabic % Constants.REDUCTION_FACTOR_1000;
-        logger.debug("arabic hundreds " + String.valueOf(arabic));
+        deriveRomanFragment(Constants.REDUCTION_FACTOR_1000);
 
-        // interrogate arabic number for hundreds
-        romanValue += getRomanValuebyPower(Constants.REDUCTION_FACTOR_100, arabic);
-        logger.debug("roman composite: " + romanValue);
+        reduceArabicByFactor(this.arabicReductionRegister, Constants.REDUCTION_FACTOR_1000);
+        deriveRomanFragment(Constants.REDUCTION_FACTOR_100);
 
+        reduceArabicByFactor(this.arabicReductionRegister,Constants.REDUCTION_FACTOR_100);
+        deriveRomanFragment(Constants.REDUCTION_FACTOR_10);
 
-        // reduce arabic to 10s
-        arabic = arabic % Constants.REDUCTION_FACTOR_100;
-        logger.debug("arabic tens " + String.valueOf(arabic));
+        reduceArabicByFactor(this.arabicReductionRegister, Constants.REDUCTION_FACTOR_10);
 
-        // interrogate arabic number for tens
-        romanValue += getRomanValuebyPower(Constants.REDUCTION_FACTOR_10, arabic);
-        logger.debug("roman composite: " + romanValue);
-
-        // reduce arabic to ones
-        arabic = arabic % Constants.REDUCTION_FACTOR_10;
-        logger.debug("arabic ones " + String.valueOf(arabic));
-
-        // interrogate arabic number for 1s
-        if(arabic < Constants.REDUCTION_FACTOR_10 && arabic > Constants.ZERO){
-            romanValue += lookupList.get(String.valueOf(arabic));
-            logger.debug("roman composite: " + romanValue);
-        }
-
-
-        return romanValue;
+        deriveRomanFragment(1);
+        
+        return romanNumeralAccumulator;
     }
+
+    private void reduceArabicByFactor(int arabicIn, int reductionFactor){
+        this.arabicReductionRegister =  arabicIn % reductionFactor;
+    }
+
+    private void deriveRomanFragment(int reductionFactor){
+        this.romanNumeralAccumulator += getRomanValuebyPower(reductionFactor, this.arabicReductionRegister);
+        logger.debug("roman composite: " + this.romanNumeralAccumulator);
+    }
+
+
+    private boolean checkArabicInputInRange(int arabicIn){
+        if (arabicIn > Constants.MAX_INPUT_INT || arabicIn < Constants.MIN_INPUT_INT){
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
