@@ -78,8 +78,8 @@ public class RomanNumeralConverter {
 
         reduceArabicByFactor(this.arabicReductionRegister, Constants.REDUCTION_FACTOR_10);
 
-        deriveRomanFragment(1);
-        
+        deriveRomanFragment(Constants.REDUCTION_FACTOR_1);
+
         return romanNumeralAccumulator;
     }
 
