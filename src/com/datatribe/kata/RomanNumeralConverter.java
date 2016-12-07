@@ -1,13 +1,13 @@
 package com.datatribe.kata;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.TreeMap;
 import java.util.Map;
-import com.datatribe.util.*;
+import com.datatribe.util.Utility;
+import com.datatribe.util.Constants;
 import org.apache.log4j.*;
-import java.io.*;
+
 import java.util.*;
 
 /**
@@ -29,12 +29,15 @@ public class RomanNumeralConverter {
     private static Logger logger = Utility.logger;
     private static Utility util;
 
-    /**
-     *  constructor
-     *
-     *  Sets up the lookup map and then automatically creates a reverse lookup map from that
-      */
-   public RomanNumeralConverter(){
+    private int arabicReductionRegister = 0;
+    private String romanNumeralAccumulator = "";
+
+   /**
+    *  constructor
+    *
+    *  Sets up the lookup map and then automatically creates a reverse lookup map from that
+    */
+    public RomanNumeralConverter(){
         util = new Utility();
         lookupList = new TreeMap<>();
         reverseLookup = new TreeMap<>();
@@ -57,46 +60,42 @@ public class RomanNumeralConverter {
      * @return a properly constructed Roman Numeral representing the value of the input int
      */
     public String arabicToRoman(int arabic){
-        String romanValue = "";
-
-        if (arabic > 3999 || arabic < 1){
+        this.romanNumeralAccumulator = "";
+        this.arabicReductionRegister = arabic;
+        if (!checkArabicInputInRange(arabic)){
             return "Out of Range";
         }
 
-        // interrogate arabic number for thousands
-        romanValue += getRomanValuebyPower(1000, arabic);
-        logger.debug("roman composite: " + romanValue);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_1000);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_100);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_10);
+        distillRomanFragmentFromArabicByPower(Constants.REDUCTION_FACTOR_1);
 
-        // reduce arabic to hundreds
-        arabic = arabic % 1000;
-        logger.debug("arabic hundreds " + String.valueOf(arabic));
-
-        // interrogate arabic number for hundreds
-        romanValue += getRomanValuebyPower(100, arabic);
-        logger.debug("roman composite: " + romanValue);
-
-
-        // reduce arabic to 10s
-        arabic = arabic % 100;
-        logger.debug("arabic tens " + String.valueOf(arabic));
-
-        // interrogate arabic number for tens
-        romanValue += getRomanValuebyPower(10, arabic);
-        logger.debug("roman composite: " + romanValue);
-
-        // reduce arabic to ones
-        arabic = arabic % 10;
-        logger.debug("arabic ones " + String.valueOf(arabic));
-
-        // interrogate arabic number for 1s
-        if(arabic < 10 && arabic > 0){
-            romanValue += lookupList.get(String.valueOf(arabic));
-            logger.debug("roman composite: " + romanValue);
-        }
-
-
-        return romanValue;
+        return this.romanNumeralAccumulator;
     }
+
+    private void distillRomanFragmentFromArabicByPower(int factor){
+        deriveRomanFragment(factor);
+        reduceArabicByFactor(factor);
+    }
+
+    private void reduceArabicByFactor(int reductionFactor){
+        this.arabicReductionRegister =  this.arabicReductionRegister % reductionFactor;
+    }
+
+    private void deriveRomanFragment(int reductionFactor){
+        this.romanNumeralAccumulator += getRomanValuebyPower(reductionFactor, this.arabicReductionRegister);
+        logger.debug("roman composite: " + this.romanNumeralAccumulator);
+    }
+
+
+    private boolean checkArabicInputInRange(int arabicIn){
+        if (arabicIn > Constants.MAX_INPUT_INT || arabicIn < Constants.MIN_INPUT_INT){
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
@@ -116,7 +115,7 @@ public class RomanNumeralConverter {
      */
     public int romanToArabic(String roman) {
 
-        int aggregator = 0;
+        int aggregator = Constants.ZERO;
         int tmpval;
 
         try{
@@ -127,7 +126,7 @@ public class RomanNumeralConverter {
             }
         } catch (StringIndexOutOfBoundsException e){
             // invalid entries provided
-            return 0;
+            return Constants.ZERO;
         }
         // when no more roman numeral characters remain, we have looked up all available chunks
         logger.debug("Reverse Lookup produced " + String.valueOf(aggregator));
@@ -164,12 +163,11 @@ public class RomanNumeralConverter {
         String powerLabel = String.valueOf(power);
         String output = "";
 
-        if(arabic / power > 0){
+        if(arabic / power > Constants.ZERO){
             logger.debug("arabic contains a multiple of " + powerLabel);
             String cKey = String.valueOf((Math.abs(arabic/power) * power));
             logger.debug("Arabic " + powerLabel + ": " + cKey);
             output = lookupList.get(cKey);
-
         }
         return output;
     }
@@ -181,19 +179,17 @@ public class RomanNumeralConverter {
 
     private void buildReferenceData(){
 
-            String configtext;
-            List<String> lookupvals = Utility.readFile("data.txt");
-            //String lookupvals[] = configtext.split("[\n\r]");
-            //String set[];
+        String configtext;
+        List<String> lookupvals = Utility.readFile("data.txt");
+
         String pair="";
         String set[];
         ListIterator<String> listit = lookupvals.listIterator();
-            while( listit.hasNext()){
-                // util.debug("importing roman numeral settings :" + pair);
-                pair = (String)listit.next();
-                set = pair.split(",");
-                lookupList.put(set[0],set[1]);
-            }
+        while( listit.hasNext()){
+            pair = (String)listit.next();
+            set = pair.split(",");
+            lookupList.put(set[0],set[1]);
+        }
 
 
         // automatically build the reverse lookup list
